@@ -1,6 +1,6 @@
 <?php
 /**
-* Telegram Bot example for dovedormireinpugliabot
+* Telegram Bot example for dovedormireinliguriabot
 * @author Francesco Piero Paolicelli @piersoft
 */
 //include("settings_t.php");
@@ -29,17 +29,17 @@ function start($telegram,$update)
 {
 	date_default_timezone_set('Europe/Rome');
 	$today = date("Y-m-d H:i:s");
-	if (strpos($text,'@dovedormireinpugliabot') !== false) $text=str_replace("@dovedormireinpugliabot ","",$text);
+	if (strpos($text,'@dovedormireinliguriabot') !== false) $text=str_replace("@dovedormireinliguriabot ","",$text);
 
 	if ($text == "/start" || $text == "©️ Informazioni") {
-		$img = curl_file_create('logofvg.png','image/png');
+		$img = curl_file_create('logolig.png','image/png');
 		$contentp = array('chat_id' => $chat_id, 'photo' => $img);
 		$telegram->sendPhoto($contentp);
-		$reply = "Benvenuto. Per ricercare una struttura ricettiva della Puglia, censita da ARET Pugliapromozione, digita il nome del Comune oppure clicca sulla graffetta (📎) e poi 'posizione' . Puoi anche ricercare per parola chiave nel titolo anteponendo il carattere ?. Verrà interrogato il DataBase openData utilizzabile con licenza IoDL2.0 presente su http://www.dataset.puglia.it/dataset/elenco-strutture-ricettive . In qualsiasi momento scrivendo /start ti ripeterò questo messaggio di benvenuto.\nQuesto bot, non ufficiale e non collegato con il marchio regionale ViaggiareinPuglia.it, è stato realizzato da @piersoft e potete migliorare il codice sorgente con licenza MIT che trovate su https://github.com/piersoft/. La propria posizione viene ricercata grazie al geocoder di openStreetMap con Lic. odbl.";
+		$reply = "Benvenuto. Per ricercare una struttura ricettiva in Liguria, censita da Regione Liguria sul proprio portale OpenData, digita il nome del Comune oppure clicca sulla graffetta (📎) e poi 'posizione' . Puoi anche ricercare per parola chiave nel titolo anteponendo il carattere ?. Verrà interrogato il DataBase openData utilizzabile con licenza CC-BY presente su http://www.regione.liguria.it/sep-servizi-online/catalogo-servizi-online/opendata/item/6883-strutture-ricettive-alberghiere.html . In qualsiasi momento scrivendo /start ti ripeterò questo messaggio di benvenuto.\nQuesto bot, non ufficiale e non collegato con la Regione Liguria, è stato realizzato da @piersoft con il contributo di Giovanni Tafuri e potete migliorare il codice sorgente con licenza MIT che trovate su https://github.com/piersoft/dovedormireinliguriabot. \nApprofondimenti sulle licenze:\nLa propria posizione viene ricercata grazie al geocoder di openStreetMap con Lic. odbl.\nIl dataset originale NON era georiferito. Non è stato possibile usare strumenti Open comune Nominatim o MapQuest.\nSi è quindi usato Google Maps ergo il dataset derivato si può visualizzare solo su Google Maps e quindi NON è più open.\nImmagine derivata da Wikipedia Lic CC-BY-SA";
 		$content = array('chat_id' => $chat_id, 'text' => $reply,'disable_web_page_preview'=>true);
 		$telegram->sendMessage($content);
 		$log=$today. ",new chat started," .$chat_id. "\n";
-		file_put_contents('/usr/www/piersoft/dovedormireinpugliabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
+		file_put_contents('/usr/www/piersoft/dovedormireinliguriabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
 		$this->create_keyboard_temp($telegram,$chat_id);
 		exit;
 	}elseif ($text == "/location" || $text == "🌐 Posizione") {
@@ -50,13 +50,13 @@ function start($telegram,$update)
 		$keyb = $telegram->buildKeyBoard($option, $onetime=false);
 		$content = array('chat_id' => $chat_id, 'reply_markup' => $keyb, 'text' => "Attiva la localizzazione sul tuo smartphone / Turn on your GPS");
 		$log=$today. ",sendpositiondirect," .$chat_id. "\n";
-		file_put_contents('/usr/www/piersoft/dovedormireinpugliabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
+		file_put_contents('/usr/www/piersoft/dovedormireinliguriabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
 
 			$this->create_keyboard_temp($telegram,$chat_id);
 		exit;
 		}
 		elseif ($text == "🏛 Città") {
-			$reply = "Digita direttamente il nome del Comune dove cerchi una struttura ricettiva.\nEsempio: <b>Alessano</b>";
+			$reply = "Digita direttamente il nome del Comune dove cerchi una struttura ricettiva.\nEsempio: <b>Manarola</b>";
 			$content = array('chat_id' => $chat_id, 'text' => $reply,'disable_web_page_preview'=>true,'parse_mode'=>"HTML");
 			$telegram->sendMessage($content);
 			$log=$today. ",cityinfo," .$chat_id. "\n";
@@ -64,11 +64,11 @@ function start($telegram,$update)
 			exit;
 			}
 			elseif ($text == "❓ Ricerca") {
-				$reply = "Scrivi la parola da cercare anteponendo il carattere ?\nEsempio: <b>?ANTICHE MACINE</b>";
+				$reply = "Scrivi la parola da cercare anteponendo il carattere ?\nEsempio: <b>?Principe</b>";
 				$content = array('chat_id' => $chat_id, 'text' => $reply,'disable_web_page_preview'=>true,'parse_mode'=>"HTML");
 				$telegram->sendMessage($content);
 				$log=$today. ",ricercainfo," .$chat_id. "\n";
-				file_put_contents('/usr/www/piersoft/dovedormireinpugliabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
+				file_put_contents('/usr/www/piersoft/dovedormireinliguriabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
 
 					$this->create_keyboard_temp($telegram,$chat_id);
 				exit;
@@ -105,7 +105,7 @@ if(strpos($text,'!') !== false) {
 			}
 
 			$homepage="";
-$json_string=file_get_contents("/usr/www/piersoft/dovedormireinpugliabot/db/ricettive.json");
+$json_string=file_get_contents("/usr/www/piersoft/dovedormireinliguriabot/db/ricettive.json");
 
 			$parsed_json = json_decode($json_string);
 
@@ -115,29 +115,43 @@ foreach ($parsed_json->{'features'} as $i => $value) {
 
 	if ($string==0){
 		$filter=$parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'};
+		if (strtoupper($filter)==strtoupper($text)){
+						$ciclo++;
 
+						$homepage = "Nome\Name: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'denominazione_struttura'}."</b>\n";
+						if ($string!=0) $homepage .= "Località\Location: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}."</b>\n";
+						$homepage .= "Tipologia\Typology: <b>".utf8_decode($parsed_json->{'features'}[$i]->{'properties'}->{'categoria'})."</b>\n";
+						if (strip_tags($parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}) !=null)	$homepage .= "Località\Location: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}."</b>\n";
+						$homepage .= "Clicca per dettagli\Click for details: /".$i."\n";
+						$homepage .="____________";
+						$chunks = str_split($homepage, self::MAX_LENGTH);
+						foreach($chunks as $chunk) {
+						$content = array('chat_id' => $chat_id, 'text' => $chunk,'disable_web_page_preview'=>true,'parse_mode'=>"HTML");
+						$telegram->sendMessage($content);
+
+						}
+						}
 	}else{
 		$filter=$parsed_json->{'features'}[$i]->{'properties'}->{'denominazione_struttura'};
+		if(strpos(strtoupper($filter),strtoupper($text)) !== false){
+						$ciclo++;
 
+						$homepage = "Nome\Name: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'denominazione_struttura'}."</b>\n";
+						if ($string!=0) $homepage .= "Località\Location: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}."</b>\n";
+						$homepage .= "Tipologia\Typology: <b>".utf8_decode($parsed_json->{'features'}[$i]->{'properties'}->{'categoria'})."</b>\n";
+						if (strip_tags($parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}) !=null)	$homepage .= "Località\Location: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}."</b>\n";
+						$homepage .= "Clicca per dettagli\Click for details: /".$i."\n";
+						$homepage .="____________";
+						$chunks = str_split($homepage, self::MAX_LENGTH);
+						foreach($chunks as $chunk) {
+						$content = array('chat_id' => $chat_id, 'text' => $chunk,'disable_web_page_preview'=>true,'parse_mode'=>"HTML");
+						$telegram->sendMessage($content);
+
+						}
+						}
 	}
 
 
-
-if (strpos(strtoupper($filter),strtoupper($text)) !== false ){
-				$ciclo++;
-
-				$homepage = "Nome: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'denominazione_struttura'}."</b>\n";
-				if ($string!=0) $homepage .= "Località: <b>".$parsed_json->{'features'}[$i]->{'properties'}->{'nome_comune'}."</b>\n";
-				$homepage .= "Tipologia: <b>".utf8_decode($parsed_json->{'features'}[$i]->{'properties'}->{'categoria'})."</b>\n";
-				$homepage .= "Clicca per dettagli: /".$i."\n";
-				$homepage .="____________";
-				$chunks = str_split($homepage, self::MAX_LENGTH);
-				foreach($chunks as $chunk) {
-				$content = array('chat_id' => $chat_id, 'text' => $chunk,'disable_web_page_preview'=>true,'parse_mode'=>"HTML");
-				$telegram->sendMessage($content);
-
-				}
-				}
 				if ($ciclo>=20 && $all==0){
 					$location="Troppe strutture per questa ricerca, ti ho mostrato le prime 20.\nSe proprio vuoi averle tutte <b>(potrebbero essere centinaia ATTENZIONE!!)</b>, allora digita la località anteponendo il carattere !.\nEsempio !Aquileia";
 					$content = array('chat_id' => $chat_id, 'text' => $location,'disable_web_page_preview'=>true,'parse_mode'=>"HTML");
@@ -154,7 +168,7 @@ if (strpos(strtoupper($filter),strtoupper($text)) !== false ){
 				}
 
 		$log=$today. ",".$text.",".$chat_id. "\n";
-		file_put_contents('/usr/www/piersoft/dovedormireinpugliabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
+		file_put_contents('/usr/www/piersoft/dovedormireinliguriabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
 
 			$this->create_keyboard_temp($telegram,$chat_id);
 exit;
@@ -166,7 +180,7 @@ exit;
 		$content = array('chat_id' => $chat_id, 'text' => $location,'disable_web_page_preview'=>true);
 		$telegram->sendMessage($content);
 		$homepage="";
-		$json_string=file_get_contents("/usr/www/piersoft/dovedormireinpugliabot/db/ricettive.json");
+		$json_string=file_get_contents("/usr/www/piersoft/dovedormireinliguriabot/db/ricettive.json");
 
 		$parsed_json = json_decode($json_string);
 
@@ -210,12 +224,17 @@ $i=$textint;
 		if (strip_tags($parsed_json->{'features'}[$i]->{'properties'}->{'foto1'}) !=null) $homepage .= "Foto: ".strip_tags($parsed_json->{'features'}[$i]->{'properties'}->{'foto1'})."\n";
 
 	if(strpos($parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[0],'.') !== false){
+/*
 		$homepagemappa .= "http://www.openstreetmap.org/?mlat=".$parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[1]."&mlon=".$parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[0]."#map=19/".$parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[1]."/".$parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[0];
 
 		$option = array( array( $telegram->buildInlineKeyboardButton("MAPPA", $url=$homepagemappa)));
 		$keyb = $telegram->buildInlineKeyBoard($option);
 		$content = array('chat_id' => $chat_id, 'reply_markup' => $keyb, 'text' => "<b>Vai alla</b>",'parse_mode'=>"HTML");
 		$telegram->sendMessage($content);
+*/
+$content = array('chat_id' => $chat_id, 'text' => "<b>Vai alla</b>",'latitude'=>$parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[1],'longitude'=>$parsed_json->{'features'}[$i]->{'geometry'}->{'coordinates'}[0]);
+$telegram->sendLocation($content);
+
 	}
 
 			$homepage .="____________";
@@ -238,7 +257,7 @@ if ($ciclo==0){
 
 //	}
 	$log=$today. ",".$text.",".$chat_id. "\n";
-	file_put_contents('/usr/www/piersoft/dovedormireinpugliabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
+	file_put_contents('/usr/www/piersoft/dovedormireinliguriabot/db/telegram.log', $log, FILE_APPEND | LOCK_EX);
 	$this->create_keyboard_temp($telegram,$chat_id);
 	exit;
 
@@ -293,7 +312,7 @@ if ($ciclo==0){
 
 	 			  $alert="";
 	 				$homepage="";
-	 	$json_string=file_get_contents("/usr/www/piersoft/dovedormireinpugliabot/db/ricettive.json");
+	 	$json_string=file_get_contents("/usr/www/piersoft/dovedormireinliguriabot/db/ricettive.json");
 
 	 				$parsed_json = json_decode($json_string);
 /*
@@ -372,8 +391,10 @@ if ($ciclo==0){
 	 		$homepage .= "Clicca per dettagli: /".$csv[$i][106]."\n";
 	 		$homepage .="Dista: ".$csv[$i][100]."\n";
 	 		//	$homepage .= "http://www.openstreetmap.org/?mlat=".$csv[$i][12]."&mlon=".$csv[$i][13]."#map=19/".$csv[$i][12]."/".$csv[$i][13];
-	 		$location2 ="http://map.project-osrm.org/?z=14&center=40.351025%2C18.184133&loc=".$lat."%2C".$lon."&loc=".$csv[$i][104]."%2C".$csv[$i][105]."&hl=en&ly=&alt=&df=&srv=";
-	 		$homepage .="<a href='".$location2."'>Portami QUI</a>";
+	 		//$location2 ="http://map.project-osrm.org/?z=14&center=40.351025%2C18.184133&loc=".$lat."%2C".$lon."&loc=".$csv[$i][104]."%2C".$csv[$i][105]."&hl=en&ly=&alt=&df=&srv=";
+
+			$location2 ="https://www.google.com/maps/dir/?api=1&origin=".$lat.",".$lon."&destination=".$csv[$i][104].",".$csv[$i][105]."&travelmode=car";
+			$homepage .="<a href='".$location2."'>Portami QUI</a>";
 
 
 	 		$homepage .="\n____________\n";
